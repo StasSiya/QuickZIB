@@ -17,13 +17,22 @@ import java.util.List;
     //This adapter creates views that hold the title of the orfSendung and is not bound to any data source
 public class ZibAdapter extends RecyclerView.Adapter<ZibAdapter.ZibViewHolder>{
 
-    // specify how many views the adapter will hold;'' create a private int member variable named mNumberItems
-    private List <MyJson.EmbeddedBeanX.ItemsBean> items;
-    private Context context;
 
-    public ZibAdapter(Context context, List <MyJson.EmbeddedBeanX.ItemsBean> mItems) {
-        this.items = mItems;
+    private List <OrfSendung> sendung;
+    private Context context;
+    final private ListItemClickListener mOnClickListener;
+
+
+    //ItemClickHandling: add an interface ListiItemClicklistener and
+
+    public interface ListItemClickListener{
+        void onClick (OrfSendung aktuelleSendung);
+    }
+ //give Adapter access to the listener, by passing ListItemClickListener to the adapter as a param
+    public ZibAdapter(Context context, List <OrfSendung> mItems, ListItemClickListener listener) {
+        this.sendung= mItems;
         this.context = context;
+        mOnClickListener = listener;
     }
 
 
@@ -33,16 +42,26 @@ public class ZibAdapter extends RecyclerView.Adapter<ZibAdapter.ZibViewHolder>{
         return position;
     }
 
-    class ZibViewHolder extends RecyclerView.ViewHolder {
+    class ZibViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         TextView listItemView;
 
+//implement OnItemClicklistner so that the ViewHolder can invoce it
 
         public ZibViewHolder(View itemView) {
             super(itemView);
 
             listItemView = (TextView)itemView.findViewById(R.id.zib_item);
+            itemView.setOnClickListener(this);
 
         }
+        @Override
+        public void onClick(View view) {
+            int clickedPosition = getAdapterPosition();
+            OrfSendung aktuelleSendung = sendung.get(clickedPosition) ;
+            mOnClickListener.onClick(aktuelleSendung);
+        }
+
     }
 
 
@@ -65,7 +84,7 @@ public class ZibAdapter extends RecyclerView.Adapter<ZibAdapter.ZibViewHolder>{
 
     @Override
     public void onBindViewHolder(ZibViewHolder holder, int position) {
-        holder.listItemView.setText("Sendungstitel" + items.get(position).getTitle());
+        holder.listItemView.setText("Sendungstitel" + sendung.get(position).getName());
         /*String currentShow = mShowData.toString().indexOf();//get the data for the current show
         holder.listItemView.setText(currentShow);//set the data of the currentshow onto the ListItemView*/
     }
@@ -73,7 +92,7 @@ public class ZibAdapter extends RecyclerView.Adapter<ZibAdapter.ZibViewHolder>{
     @Override
 
     public int getItemCount() {
-        return items.size();
+        return sendung.size();
     }
 
     //create a ViewHolder class as an inner class of ZibAdapter class; here the view objects are cashed, that will be populated with data
