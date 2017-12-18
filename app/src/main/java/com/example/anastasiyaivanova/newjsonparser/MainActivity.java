@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements ZibAdapter.ListIt
                     startActivity(i);
 
                 } catch (JSONException e) {
-                    Log.e(TAG, "json ich liebe Stefan", e);
+                    Log.e(TAG, "json problem", e);
                 }
             }
         }, new Response.ErrorListener() {
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements ZibAdapter.ListIt
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "json problem", e);
-                    //TODO: Handle exception
+
                 }
 
                 Log.d(TAG, "creating adapter");
